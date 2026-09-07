@@ -1,5 +1,7 @@
 package com.gabriel.Spring_Boot_REST.controllers;
 
+import com.gabriel.Spring_Boot_REST.math.SimpleMath;
+import com.gabriel.Spring_Boot_REST.request.converters.NumberConverter;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,14 +12,16 @@ import java.util.UnknownFormatConversionException;
 @RequestMapping("/math")
 public class MathController {
 
+    private SimpleMath math = new SimpleMath();
+
     //soma
     @RequestMapping("/sum/{numberOne}/{numberTwo}")
     public Double sum(
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
     ) throws Exception{
-        if(!isNumeric(numberOne) || !isNumeric(numberTwo)) throw new UnsupportedOperationException("Please set a numeric value");
-        return convertToDouble(numberOne) + convertToDouble(numberTwo);
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) throw new UnsupportedOperationException("Please set a numeric value");
+        return math.sum(NumberConverter.convertToDouble(numberOne), NumberConverter.convertToDouble(numberTwo));
     }
 
     @RequestMapping("/subtraction/{numberOne}/{numberTwo}")
@@ -25,8 +29,8 @@ public class MathController {
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
     )throws Exception{
-        if(!isNumeric(numberOne) || !isNumeric(numberTwo)) throw new UnsupportedOperationException("Please set a numeric value");
-        return convertToDouble(numberOne.replace(",", "."))-convertToDouble(numberTwo.replace(",", "."));
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) throw new UnsupportedOperationException("Please set a numeric value");
+        return math.subtraction(NumberConverter.convertToDouble(numberOne.replace(",", ".")),NumberConverter.convertToDouble(numberTwo.replace(",", ".")));
     }
 
     @RequestMapping("/multiplication/{numberOne}/{numberTwo}")
@@ -34,8 +38,8 @@ public class MathController {
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
     )throws IllegalArgumentException{
-        if(!isNumeric(numberOne) || !isNumeric(numberTwo)) throw new UnknownFormatConversionException("Please set a numeric value");
-        return convertToDouble(numberOne.replace(",", "."))*convertToDouble(numberTwo.replace(",", "."));
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) throw new UnknownFormatConversionException("Please set a numeric value");
+        return math.multiplication(NumberConverter.convertToDouble(numberOne.replace(",", ".")),NumberConverter.convertToDouble(numberTwo.replace(",", ".")));
     }
 
     @RequestMapping("/division/{numberOne}/{numberTwo}")
@@ -43,8 +47,8 @@ public class MathController {
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
     )throws IllegalArgumentException{
-        if(!isNumeric(numberOne) || !isNumeric(numberTwo)) throw new UnknownFormatConversionException("Please set a numeric value");
-        return convertToDouble(numberOne.replace(",", "."))/convertToDouble(numberTwo.replace(",", "."));
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) throw new UnknownFormatConversionException("Please set a numeric value");
+        return math.division(NumberConverter.convertToDouble(numberOne.replace(",", ".")),NumberConverter.convertToDouble(numberTwo.replace(",", ".")));
     }
 
     @RequestMapping("/mean/{numberOne}/{numberTwo}")
@@ -52,29 +56,18 @@ public class MathController {
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
     )throws IllegalArgumentException{
-        if(!isNumeric(numberOne) || !isNumeric(numberTwo)) throw new UnknownFormatConversionException("Please set a numeric value");
-        return (convertToDouble(numberOne.replace(",", "."))+convertToDouble(numberTwo.replace(",", ".")))/2;
+        if(!NumberConverter.isNumeric(numberOne) || !NumberConverter.isNumeric(numberTwo)) throw new UnknownFormatConversionException("Please set a numeric value");
+        return math.mean(NumberConverter.convertToDouble(numberOne.replace(",", ".")),NumberConverter.convertToDouble(numberTwo.replace(",", ".")));
     }
 
     @RequestMapping("/sqrt/{numberOne}")
     public Double sqrt(
             @PathVariable("numberOne") String numberOne
     )throws IllegalArgumentException{
-        if(!isNumeric(numberOne)) throw new UnknownFormatConversionException("Please set a numeric value");
-        return Math.sqrt((convertToDouble(numberOne.replace(",", "."))));
+        if(!NumberConverter.isNumeric(numberOne)) throw new UnknownFormatConversionException("Please set a numeric value");
+        return math.sqrt(NumberConverter.convertToDouble(numberOne.replace(",", ".")));
 
     }
 
-    private Double convertToDouble(String strnumber) throws IllegalArgumentException{
-        if (strnumber == null || strnumber.isEmpty()) throw new UnsupportedOperationException("Please set a numeric value");
-        String number =  strnumber.replace(",", ".");
 
-        return Double.parseDouble(strnumber);
-    }
-
-    private boolean isNumeric (String strnumber){
-        if (strnumber == null || strnumber.isEmpty()) return false;
-        String number =  strnumber.replace(",", ".");
-        return (number.matches("[-+]?[0-9]*\\.?[0-9]+"));
-    }
 }
