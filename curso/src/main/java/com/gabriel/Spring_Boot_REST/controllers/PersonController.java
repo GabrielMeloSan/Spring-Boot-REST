@@ -24,11 +24,22 @@ public class PersonController {
         return service.findById(id);
     }
 
-    @RequestMapping(    
+    @RequestMapping(
             method= RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public List<Person> findAll(){
         return service.findAll();
     }
+
+    @RequestMapping(
+            method= RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Person create(Person person){
+        return service.create(person);
+    }
+
+
 }
